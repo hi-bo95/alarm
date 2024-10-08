@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../git_sample"
+		},
+		{
+			"path": "../../../../ドキュメント/Arduino/ESP-01-WifiOTA"
+		},
+		{
+			"path": "../../cafe_management"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {}
+}

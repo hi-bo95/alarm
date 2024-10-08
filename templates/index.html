@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>らくらく目覚まし</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background-color: #4CAF50;
+            padding: 20px;
+            color: white;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .container {
+            padding: 15px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: inline;
+        }
+
+        @media only screen and (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1.2em;
+            }
+            .button {
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ソダテル</h1>
+    </header>
+
+    <div class="container">
+        <h2>直近のアラーム</h2>
+        <p>{{ next_alarm }}</p>
+
+        <button class="button" onclick="location.href='{{ url_for('set_alarm_page') }}'">アラームを設定</button>
+
+        <h2>設定されたアラーム</h2>
+        <ul>
+            {% for alarm in alarms %}
+            <li>{{ alarm['alarm_time'] }}
+                <form action="/delete_alarm" method="POST">
+                    <input type="hidden" name="alarm_id" value="{{ alarm['alarm_id'] }}">
+                    <button class="button" type="submit">削除</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+        {% if alarms %}
+        <form action="/delete_all_alarms" method="POST">
+            <button class="button">すべてのアラームを削除</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <script>
+        setInterval(function() {
+            fetch('/check_alarm')
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'redirect') {
+                        window.location.href = '/alarm_page';
+                    }
+                });
+        }, 5000);
+    </script>
+</body>
+</html>

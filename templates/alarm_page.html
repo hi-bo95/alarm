@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花が咲くまでのステップ</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2em;
+            color: #2e8b57;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1.2em;
+            color: #333;
+        }
+        ul li:nth-child(odd) {
+            background-color: #e6ffe6;
+        }
+    </style>
+</head>
+<body>
+    <h1>花が咲くまでの手順</h1>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    <ul>
+        {% for task in tasks %}
+        <li>{{ task }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
