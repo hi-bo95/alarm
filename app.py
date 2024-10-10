@@ -10,6 +10,13 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# アラームの自動削除関数
+def delete_past_alarms():
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+    conn = get_db_connection()
+    conn.execute("DELETE FROM alarms WHERE alarm_time < ?", (current_time,))
+    conn.commit()
+
 # ホームページ
 @app.route('/')
 def index():
@@ -25,19 +32,22 @@ def index():
         next_alarm = "アラームは設定されていません"
 
     # 栽培開始日と期間を取得
-    cultivation = conn.execute('SELECT * FROM cultivation ORDER BY id DESC LIMIT 1').fetchone()
-    tasks = []
-    if cultivation:
-        start_date = datetime.strptime(cultivation['start_date'], '%Y-%m-%d')
-        days_passed = (datetime.now() - start_date).days
-        tasks = get_cultivation_tasks(days_passed, cultivation['duration'])
+    #cultivation = conn.execute('SELECT * FROM cultivation ORDER BY id DESC LIMIT 1').fetchone()
+    #tasks = []
+    #if cultivation:
+    #    start_date = datetime.strptime(cultivation['start_date'], '%Y-%m-%d')
+    #    days_passed = (datetime.now() - start_date).days
+    #    tasks = get_cultivation_tasks(days_passed, cultivation['duration'])
 
     conn.close()
-    return render_template('index.html', next_alarm=next_alarm, alarms=alarms, tasks=tasks, points=user['points'])
+    #return render_template('index.html', next_alarm=next_alarm, alarms=alarms, tasks=tasks, points=user['points'])
+    return render_template('index.html', next_alarm=next_alarm, alarms=alarms)
+
 
 # アラームページ（アラームが鳴ったときに表示するページ）
 @app.route('/alarm_page')
 def alarm_page():
+    delete_past_alarms()        # アラームの自動削除関数
     conn = get_db_connection()
     alarm = conn.execute('SELECT * FROM alarms WHERE id = ?', (1,)).fetchone()  # 仮に1つのアラームのみ取得
     conn.close()
@@ -97,32 +107,55 @@ def set_cultivation_period():
         cultivation_period = request.form['cultivation_period']
         alarm_id = 1  # 仮に1つのアラームに設定
         conn = get_db_connection()
-        conn.execute('UPDATE alarms SET cultivation_period = ? WHERE id = ?', (cultivation_period, alarm_id))
+        conn.execute('UPDATE users SET cultivation_period = ? WHERE user_id = ?', (cultivation_period, alarm_id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
 
     return render_template('set_cultivation_period.html')
 
-# アラームの追加
-@app.route('/add_alarm', methods=['POST'])
+
+@app.route('/add_alarm', methods=['GET','POST'])
 def add_alarm():
-    alarm_time = request.form['alarm_time']
+    delete_past_alarms()        # アラームの自動削除関数
     conn = get_db_connection()
-    conn.execute('INSERT INTO alarms (alarm_time, cultivation_period) VALUES (?, ?)', (alarm_time, 1))  # デフォルト1ヶ月
-    conn.commit()
+    alarms = conn.execute('SELECT * FROM alarms ORDER BY alarm_time ASC').fetchall()
     conn.close()
-    return redirect(url_for('index'))
+    if request.method == 'POST':
+        # フォームから日付と時間を取得
+        alarm_date = request.form['date']
+        alarm_time = request.form['time']
+            
+        # 日付と時間を結合して alarm_time を作成 (例: "2024-10-09 07:30")
+        alarm_datetime = f"{alarm_date} {alarm_time}"
+        print(alarm_datetime)
+
+        # データベースに挿入
+        conn = get_db_connection()
+        conn.execute('INSERT INTO alarms (alarm_time) VALUES (?)', (alarm_datetime,)) 
+        conn.commit()
+        alarms = conn.execute('SELECT * FROM alarms ORDER BY alarm_time ASC').fetchall()
+        conn.close()
+        #return redirect(url_for('index'))
+        return render_template('set_alarm.html', alarms=alarms)
+    
+    return render_template('set_alarm.html', alarms=alarms)
+    #return render_template('index.html', next_alarm=next_alarm, alarms=alarms)
+
+
 
 # アラームの削除
 @app.route('/delete_alarm', methods=['POST'])
 def delete_alarm():
+    delete_past_alarms()        # アラームの自動削除関数
     alarm_id = request.form['alarm_id']
     conn = get_db_connection()
-    conn.execute('DELETE FROM alarms WHERE id = ?', (alarm_id,))
+    conn.execute('DELETE FROM alarms WHERE alarm_id = ?', (alarm_id,))
     conn.commit()
+    alarms = conn.execute('SELECT * FROM alarms ORDER BY alarm_time ASC').fetchall()
     conn.close()
-    return redirect(url_for('index'))
+    #return redirect(url_for('index'))
+    return render_template('set_alarm.html', alarms=alarms)
 
 if __name__ == '__main__':
     app.run(debug=True)

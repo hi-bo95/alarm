@@ -51,7 +51,7 @@
             background-color: #45a049;
         }
 
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 500px) {
             h1 {
                 font-size: 1.5em;
             }
@@ -73,11 +73,8 @@
         <p>{{ next_alarm }}</p>
 
         <button class="button" onclick="location.href='{{ url_for('add_alarm') }}'">アラームを設定</button>
-        
-    </div>
-
-    <div class="container">
         <button class="button" onclick="location.href='{{ url_for('set_cultivation_period') }}'">栽培期間を設定</button>
+
         
     </div>
     <script>
