@@ -14,7 +14,7 @@ def get_db_connection():
 def delete_past_alarms():
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M')
     conn = get_db_connection()
-    conn.execute("DELETE FROM alarms WHERE alarm_time < ?", (current_time,))
+    conn.execute("DELETE FROM alarms WHERE alarm_time <= ?", (current_time,))
     conn.commit()
 
 # ホームページ
@@ -49,7 +49,7 @@ def index():
 def alarm_page():
     delete_past_alarms()        # アラームの自動削除関数
     conn = get_db_connection()
-    alarm = conn.execute('SELECT * FROM alarms WHERE id = ?', (1,)).fetchone()  # 仮に1つのアラームのみ取得
+    alarm = conn.execute('SELECT * FROM alarms WHERE alarm_id = ?', (1,)).fetchone()  # 仮に1つのアラームのみ取得
     conn.close()
 
     if alarm:
@@ -156,6 +156,23 @@ def delete_alarm():
     conn.close()
     #return redirect(url_for('index'))
     return render_template('set_alarm.html', alarms=alarms)
+
+# アラームの確認（API）
+@app.route('/check_alarm')
+def check_alarm():
+    conn = get_db_connection()
+    # 直近のアラームを取得
+    alarm = conn.execute('SELECT * FROM alarms ORDER BY alarm_time ASC LIMIT 1').fetchone()
+    conn.close()
+
+    if alarm:
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+        alarm_time = alarm['alarm_time']
+
+        if current_time >= alarm_time:
+            return 'redirect'
+    
+    return 'wait'
 
 if __name__ == '__main__':
     app.run(debug=True)
