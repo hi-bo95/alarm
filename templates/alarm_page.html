@@ -15,6 +15,10 @@
         <li>{{ task }}</li>
         {% endfor %}
     </ul>
+    <audio>
+        <source src="sound.mp3" type="audio/mp3">
+      
+     </audio>
 
     <form action="/complete_task" method="POST">
         <button class="button" type="submit">手入れ終了</button>
@@ -25,9 +29,7 @@
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <img src="static/{{ img }}"  width="100">
+    <img src="static/{{ img }}"  width="150">
     <br>
 
     <a href="/" class="button">トップページへ戻る</a>

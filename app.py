@@ -144,34 +144,28 @@ def alarm_page():
             tasks = [
                 "水をやる"
             ]
-            img="grow02"
+            img="grow1.png"
         elif 4 <= days_since_start <= 7:
             tasks = [
                 "水をやる",
                 "日光に当てる"
             ]
-            img="grow03"
+            img="grow2.png"
         elif 8 <= days_since_start <= 14:
             tasks = [
                 "水をやる",
                 "雑草を抜く"
             ]
-            img="grow04"
-        elif days_since_start == 15:
-            tasks = [
-                "水をやる",
-                "肥料を与える"
-            ]
-            img="grow05"
-        elif 16 <= days_since_start <= 29:
+            img="grow3.png"
+        elif 15 <= days_since_start <= 29:
             tasks = [
                 "水をやる",
                 "雑草を抜く"
             ]
-            img="grow06"
+            img="grow4.png"
         else:
             tasks = ["花が咲きました！おめでとう！"]
-            img="grow07"
+            img="grow5.png"
 
     else:
         tasks = []
@@ -186,10 +180,10 @@ def complete_task():
     points_to_add = 2 if weekday < 5 else 1  # 平日は2ポイント、週末は1ポイント
 
     conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users WHERE id = 1').fetchone()  # ユーザーIDを仮定
+    user = conn.execute('SELECT * FROM users WHERE user_id = 1').fetchone()  # ユーザーIDを仮定
     new_points = user['points'] + points_to_add
 
-    conn.execute('UPDATE users SET points = ? WHERE id = ?', (new_points, 1))
+    conn.execute('UPDATE users SET points = ? WHERE user_id = ?', (new_points, 1))
     conn.commit()
     conn.close()
 
