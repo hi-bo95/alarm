@@ -4,51 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>花が咲くまでの手入れ</title>
-    <style>
-        body {
-            max-width: 600px;
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f8ff;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 2em;
-            color: #2e8b57;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        ul li {
-            background-color: #fff;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 1.2em;
-            color: #333;
-        }
-        ul li:nth-child(odd) {
-            background-color: #e6ffe6;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>花が咲くまでの手入れ</h1>
+    <header>
+        <h1>本日のお手入れ</h1>
+    </header>
     <ul>
         {% for task in tasks %}
         <li>{{ task }}</li>
@@ -58,6 +19,16 @@
     <form action="/complete_task" method="POST">
         <button class="button" type="submit">手入れ終了</button>
     </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <img src="static/{{ img }}"  width="100">
+    <br>
 
     <a href="/" class="button">トップページへ戻る</a>
 </body>

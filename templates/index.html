@@ -5,62 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>らくらく目覚まし</title>
-    <style>
-       body {
-            max-width: 500px;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-            background-color: #f4f4f4;
-            background-image: url('/static/top-bg-image.jpg'); /* 背景画像 */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            text-align: center;
-        }
-        header {
-            background-color: rgba(255, 255, 255, 0.8); /* 透明背景 */
-            padding: 20px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 2em;
-            color: #4CAF50;
-        }
-        .container {
-            padding: 15px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        .button {
-            background-color: #bfc993;
-            color: rgb(247, 76, 76);
-            border: none;
-            padding: 10px 20px;
-            font-size: 2em;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-
-        @media only screen and (max-width: 500px) {
-            h1 {
-                font-size: 1.5em;
-            }
-            .button {
-                font-size: 0.9em;
-                padding: 8px 16px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
 </head>
 <body>
     <header>

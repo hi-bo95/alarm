@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>栽培期間設定</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>栽培期間を設定</h1>
+    <header>
+        <h1>栽培期間を設定</h1>
+    </header>
     <form action="/set_cultivation_period" method="POST">
         <label for="cultivation_period">栽培期間を選択してください:</label>
         <select id="cultivation_period" name="cultivation_period">
